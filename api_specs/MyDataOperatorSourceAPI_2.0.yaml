@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  title: 'MyData Operator API for Source Services'
+  title: 'MyData Operator API for Source services'
   description: |
-    This API specification describes MyData Operator API that is used by MyData compliant source services. Some of the endpoints are part of the transaction flow and should not be called independently. For detailed description   see [MyData documentation](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs).
+    This API specification describes MyData Operator API that is used by MyData compliant source services. For complementary Operator - service API specification see [MyData Service API for Operator](https://github.com/mydata-sdk/mydata-docs/tree/master/api_specs). For detailed description   see [MyData documenttation](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs).
   version: '2.0'
   contact:
     url: 'https://github.com/mydata-sdk'
@@ -12,17 +12,17 @@ info:
 externalDocs:
   description: 'External documentation'
   url: 'https://github.com/mydata-sdk'
+host: 12.0.0.1
 schemes:
  - https
-host: 127.0.0.1
 paths:
 
   /link:
     post:
       tags:
-      - "SLR"
+      - "Service Linking"
       description: "End point where Service Management POSTs after user has been authenticated\
-        \ by the Service and has accepted service linking in order to deliver surrogate id to Operator. This endpoint is part of the Service Linking flow and should not be called independently. For complete description of service linking flow see see [Service Linking](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs) specification."
+        \ by the Service and has accepted service linking in order to deliver surrogate id to Operator. This endpoint is part of the Service Linking flow and should not be called independently. For detailed description of Service Linking flow see [MyData Service Linking](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs)"
       summary: "Inform Operator we're ready to continue creation of Service Link Record"
       consumes:
       - "application/json"
@@ -49,11 +49,11 @@ paths:
           schema:
             $ref: "#/definitions/errors"
 
-  /verify/:
+  /verify:
     post:
       tags:
-      - "SLR"
-      description: "End point where Service Management POSTs after signing Service Link Record received from Operator. This endpoint is part of the Service Linking flow and should not be called independently. For complete description of service linking flow see [Service Linking](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs) specification."
+      - "Service Linking"
+      description: "End point where Service Management POSTs after signing Service Link Record received from Operator. This endpoint is part of the Service Linking flow and should not be called independently. For detailed description   see [MyData Service Linking](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs)"
       summary: "Send Service Signed Service Link Record back to Operator for verification"
       consumes:
       - "application/json"
@@ -82,11 +82,11 @@ paths:
             $ref: "#/definitions/errors"
             
 
-  /introspection/{cr_id}/:
+  /introspection/{cr_id}:
     get:
       tags:
       - "Consent Management"
-      description: "Gets latest consent status record's id for given Consent Record id"
+      description: "Gets latest consent status record's id for given consent record id"
       summary: "Get last consent status record id"
       parameters:
       - name: "cr_id"
@@ -109,7 +109,7 @@ paths:
           schema:
             $ref: "#/definitions/errors"
 
-  /consent/{cr_id}/missing_since/{csr_id}/:
+  /consent/{cr_id}/missing_since/{csr_id}:
     get:
       tags:
       - "Consent Management"
@@ -282,3 +282,6 @@ definitions:
             $ref: "#/definitions/SSR_content"
           slr:
             $ref: "#/definitions/SLR_content"
+
+
+            
