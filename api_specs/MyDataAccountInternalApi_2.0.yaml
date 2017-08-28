@@ -41,7 +41,7 @@ securityDefinitions:
 
 externalDocs:
   description: 'External documentation'
-  url: 'https://github.com/HIIT/mydata-stack'
+  url: 'https://github.com/mydata-sdk'
 
 paths:
   /auth/sdk/:
