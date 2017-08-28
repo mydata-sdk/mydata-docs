@@ -1,0 +1,114 @@
+swagger: '2.0'
+
+info:
+  title: MyData - Operator configuration
+  description: |
+  
+    This API specification describes MyData Operator Configuration API. This API defines one endpoint that provides information about specific MyData Operator, such as Operator"'"s contact information, capabilities and configuration. See [MyData Service Description](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs) for more details.
+  version: '2.0'
+  contact:
+    url: 'https://github.com/mydata-sdk'
+  license:
+    name: 'MIT License (MIT)'
+    url: 'https://opensource.org/licenses/MIT'
+
+
+
+
+host: 127.0.0.1:8080
+
+schemes:
+   - https
+
+
+
+
+produces:
+  - application/json
+
+externalDocs:
+  description: 'External documentation'
+  url: 'https://github.com/mydata-sdk'
+
+paths:
+  /.well-known/mydata/mydata/operatorinfo/:
+    get:
+ 
+      summary: 'This endpoint provides information about the operator'
+      description: 'This endpoint provides information about the operator. For more details see MyData Service Description 2.0 specification.'
+      tags:
+        - Configuration
+        
+
+      responses:
+        '200':
+          description: Operator information
+          schema:
+            $ref: '#/definitions/operatorConfiguration'
+        '404':
+          description: not found
+        '500':
+          description: Internal Server error
+
+
+
+definitions:
+
+  operatorConfiguration:
+    type: object
+    properties:
+      operatorId: 
+        type: string
+
+      serviceProvider:
+        type: object
+        properties:
+          businessID: 
+            type: string
+          name: 
+            type: string
+          address1: 
+            type: string
+          address2: 
+            type: string
+          postalCode: 
+            type: string
+          city: 
+            type: string
+          state: 
+            type: string
+          country: 
+            type: string
+          contactEmail: 
+            type: string
+          contactTel: 
+            type: string
+          jurisdiction: 
+            type: string
+      serviceDescriptionVersion: 
+        type: string
+      supportedProfiles:
+        type: array
+        items:
+          type: string
+          enum: [contract, cconsenting, 3rd party re-use, notification, objection]
+      cert:
+        type: object
+        properties:
+          x5u: 
+            type: string
+      serviceUrls:
+        type: object
+        properties:
+          domain: 
+            type: string
+          libraryDomain: 
+            type: string
+          linkingUri: 
+            type: string
+          linkingRedirectUri: 
+            type: string
+      createdOnDate: 
+        type: string
+      createdByUserId:
+        type: string

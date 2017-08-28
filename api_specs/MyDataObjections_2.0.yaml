@@ -1,0 +1,203 @@
+swagger: '2.0'
+
+info:
+  title: MyData - Objection API
+  description: |
+  
+    This API specification describes MyData Objection API. This document specifies both Operator and Service side endpoints. See [MyData Objection](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs) for more details.
+  version: '2.0'
+  contact:
+    url: 'https://github.com/mydata-sdk'
+  license:
+    name: 'MIT License (MIT)'
+    url: 'https://opensource.org/licenses/MIT'
+
+
+
+
+# host: 127.0.0.1:8080
+
+schemes:
+- https
+
+
+
+
+
+produces:
+  - application/json
+consumes: 
+- application/json
+
+externalDocs:
+  description: 'External documentation'
+  url: 'https://github.com/mydata-sdk'
+# host: 127.0.0.1
+paths:
+  /objections/{surrogate_id}/:
+    post:
+      summary: "Objection request"
+      description: "Objects data processing defined in payload for user identified by {surrogate_id}. Actual ojection object is base64 encoded into body.payload and its structure is defined in Models section"
+      tags: [Service]
+      parameters:
+        - name: surrogate_id
+          in: path
+          type: string
+          description: 'user surrogate_id'
+          required: true
+        - name: subscription
+          in: body
+          description: 'JWS containing Objection object'
+          required: true
+         
+          schema:
+            $ref: '#/definitions/JWSJsonSerializedFlattened'
+      responses:
+        '201':
+          description: 'Objection received'
+
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server error
+
+
+  /objectionresult/{surrogate_id}/:
+    post:
+      summary: "POST objection result to user @operator"
+      description: "Operator endpoint for POSTing objection result to user identified by {surrogate_id}. Actual objection result object is base64 encoded into body.payload and its structure is defined in Models section. "
+      tags: 
+        [Operator]
+      parameters:
+        - name: surrogate_id
+          in: path
+          type: string
+          description: 'user surrogate_id'
+          required: true
+        - name: subscription
+          in: body
+          description: 'JWS containing Subscription object'
+          required: true
+         
+          schema:
+            $ref: '#/definitions/JWSJsonSerializedFlattened'
+      responses:
+        '201':
+          description: 'Notification received'
+
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server error
+
+
+definitions:
+  
+  objection_response:
+    type: object
+    properties:
+      version:
+        type: string
+        description: "version number, for thos release MUST be 2.0"
+      id:
+        type: string
+        description: "unique id"
+      service_id: 
+        type: string
+        description: "ID of the service issueing this notification"
+      sub:
+        type: string
+        description: "user surrogate_id"
+      iat:
+        type: string
+        description: "when the response was created"
+      request_id: 
+        type: string
+        description: "ID of the objection request"
+      decisions:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              description: "ID of objected processing"
+            decision:
+              type: string
+              enum: [accepted, rejected, pending]
+            url:
+              type: string
+              description: "URL pointing to decision description in human readable form (if rejected)"
+        
+      
+      messages:
+        type: array
+        items:
+          type: object
+          properties:
+            subject:
+              type: string
+              description: "notification subject"
+            id:
+              type: string
+              description: "unique id"
+            message:
+              type: string
+              description: "notification message"
+            url:
+              type: string
+              description: "URL for additional information"
+
+  objection:
+    type: object
+    properties:
+      id: 
+        type: string
+        description: "Unique ID"
+
+      iat:
+        type: string
+        description: "When the request was issued"
+      sub:
+        type: string
+        description: "Surrogate_id of the user"
+      processing_objected:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              description: "unique ID"
+            processingId:
+              type: string
+              description: "ID of the processing objected, see Service Description specification for details"
+            datasetId:
+              type: string
+              description: "datasetId processing being objected"
+      
+  JWSJsonSerializedFlattened:
+    type: object
+    properties:
+      header:
+        type: object
+        properties:
+          kid:
+            type: string
+      payload:
+        type: string
+      protected:
+        type: string
+      signature:
+        type: string
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /dhr/MyDataObjections/2.0

@@ -1,0 +1,406 @@
+swagger: '2.0'
+info:
+  title: MyData Operator - Service API
+  description: |
+  
+    This API specification describes MyData Service API. This API is used by the Operator to execute service linking and consenting transactions with the service. For complementary Service - MyData Operator API specification see [MyData Operator API for Source services](https://github.com/mydata-sdk/mydata-docs/tree/master/api_specs) and [MyData Operator API for Sink services](https://github.com/mydata-sdk/mydata-docs/tree/master/api_specs) . For more details on MyData transactions see [MyData Specifications](https://github.com/mydata-sdk/docs). 
+  version: '2.0'
+  contact:
+    url: 'https://github.com/mydata-sdk'
+  license:
+    name: 'MIT License (MIT)'
+    url: 'https://opensource.org/licenses/MIT'
+
+
+paths:
+  /slr/slr/:
+    post:
+      tags:
+      - "SLR Management"
+      summary: "Sign new Service Link Record"
+      description: "Sign new Service Link Record with service key. After signing the Service Link Record the service sends it to Operator's /verify endpoint compleating Service Link creation. This endpoint is part of the Service Linking transaction flow and should not be called independently. For detailed description of Service Linking see [MyData Service Linking](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs) "
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Service Status Record structure"
+        required: true
+        schema:
+          $ref: "#/definitions/newSlrParams"
+
+      responses:
+        201:
+          description: "returns 201 and newly created Service Link Record and Service Link Status Record"
+          schema:
+            $ref: "#/definitions/newSlrResponse"
+        500:
+          description: "Internal server error. The actual status code and content of the error message may vary depending on error occurred."
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"  
+  
+  /slr/status/:
+    post:
+      tags:
+      - "SLR Management"
+      summary: "Update Service Link Status"
+      description: "Store new Service Link Status Record. For detailed description of Servicel Link Status Record see [Service Linking](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs) pecification"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Signed Service Status Record in"
+        required: true
+        schema:
+          $ref: "#/definitions/slrStatusPost"
+
+      responses:
+        201:
+          description: "returns 201 and Service Status Record ID"
+          schema:
+            $ref: "#/definitions/slrStatusResponse"
+        500:
+          description: "Internal server error. The actual status code and content of the error message may vary depending on error occurred."
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"         
+
+  /cr/cr_management/:
+    post:
+      tags:
+      - "Consent Management"
+      description:  "Verify and store new Consent Record. For detailed description of Consent Record structure and verification process see [MyData Specifications](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs)"
+      summary: "Stores new Consent Record."
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Signed Consent Record structure"
+        required: true
+        schema:
+          $ref: "#/definitions/crManagementPost"
+
+      responses:
+        201:
+          description: "returns 201 and stored consent record id"
+          schema:
+            $ref: "#/definitions/crManagementReply"
+        500:
+          description: "Internal server error. The actual status code and content of the error message may vary depending on error occurred."
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"            
+    patch:
+      tags:
+      - "Consent Management"
+      description: "Update new Consent Status Record"
+      summary: "Store new Consent Status Record."
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Consent Status Record to store"
+        required: true
+        schema:
+          $ref: "#/definitions/crManagementPatch"
+
+      responses:
+        201:
+          description: "returns 201 and stored consent status record id"
+          schema:
+            $ref: "#/definitions/crManagementReply"
+        500:
+          description: "Internal server error. The actual status code and content of the error message may vary depending on error occurred."
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"            
+            
+            
+  /slr/linking:
+    post:
+      tags:
+      - "SLR Management"
+      description: "Initiate service linking process."
+      summary: "Link service account to Mydata Account. This is used by Operator when Service Linking is initiated from Service's side. For details see [MyData Specifications](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs)"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Required parameters for initiating linking"
+        required: true
+        schema:
+          $ref: "#/definitions/linkingParams"
+      responses:
+        201:
+          description: "Returns 201 CREATED and the created Service Link Record and Service Link Status Record"
+          schema:
+            $ref: "#/definitions/linkingResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"            
+            
+            
+            
+definitions:
+  errors:
+      type: object
+      properties:
+        status:
+          type: string
+          description: HTTP status code as string value.
+        code:
+          type: integer
+          description: HTTP status code
+        title:
+          type: string
+          description: Title of error message.
+        detail:
+          type: string
+          description: Detailed error message.
+        source:
+          type: string
+          description: Source URI
+
+  newSlrParams:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          code:
+            type: string
+      slr:
+        type: object
+        properties:
+          header:
+            type: object
+            properties:
+              kid:
+                type: string
+          protected:
+            type: string
+          payload:
+            type: string
+          signature:
+            type: string
+
+  newSlrResponse:
+    type: object
+    properties:
+      slr:
+        type: object
+        properties:
+          attributes:
+            type: object
+            properties:
+              signatures:
+                type: array
+              payload:
+                type: string
+          type:
+            type: string
+          id:
+            type: string
+      ssr:
+        type: object
+        properties:
+          attributes:
+            type: object
+            properties:
+              header:
+                type: object
+                properties:
+                  kid:
+                    type: string
+              protected:
+                type: string
+              payload:
+                type: string
+              signature:
+                type: string
+          type:
+            type: string
+          id:
+            type: string
+
+  slrStatusPost:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          attributes:
+            type: object
+            properties:
+              header:
+                type: object
+                properties:
+                  kid:
+                    type: string
+              protected:
+                type: string
+              payload:
+                type: string
+              signature:
+                type: string
+          type:
+            type: string
+          id:
+            type: string    
+            
+  slrStatusResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        description: "Id of stored SSR."
+    
+          
+  crManagementReply:
+   type: object
+   properties:
+     Source:
+       type: string
+       description: Consent Status Record Id for Source
+     Sink: 
+       type: string
+       description: Consent Status Record Id for Sink
+
+  crManagementPost:
+    type: object
+    properties:
+      cr:
+        type: object
+        properties:
+          header:
+            type: object
+            properties:
+              kid:
+                type: string
+          protected:
+            type: string
+          payload:
+            type: string
+          signature:
+            type: string
+      csr:
+        type: object
+        properties:
+          header:
+            type: object
+            properties:
+              kid:
+                type: string
+          protected:
+            type: string
+          payload:
+            type: string
+          signature:
+            type: string        
+
+  crManagementPatch:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          attributes:
+            type: object
+            properties:
+              header:
+                type: object
+                properties:
+                  kid:
+                    type: string
+              protected:
+                type: string
+              payload:
+                type: string
+              signature:
+                type: string
+          type:
+            type: string
+          id:
+            type: string
+            
+  linkingParams:
+    type: object
+    properties:
+      code:
+        type: string
+      surrogate_id:
+        type: string
+      operator_id:
+        type: string
+      user_id:
+        type: string
+      return_url:
+        type: string        
+        
+  linkingResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      data:
+        type: object
+        properties:
+          slr:
+            type: object
+            properties:
+              attributes:
+                type: object
+                properties:
+                  signatures:
+                    type: array
+                  payload:
+                    type: string
+              type:
+                type: string
+              id:
+                type: string
+          ssr:
+            type: object
+            properties:
+              attributes:
+                type: object
+                properties:
+                  header:
+                    type: object
+                    properties:
+                      kid:
+                        type: string
+                  protected:
+                    type: string
+                  payload:
+                    type: string
+                  signature:
+                    type: string
+              type:
+                type: string
+              id:
+                type: string              
+            
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+# basePath: /dhr/APIMyDataServiceLibraryToOperator/2.0
+schemes:
+ - https
+# Added by API Auto Mocking Plugin
+basePath: /dhr/MyDataServiceAPI/2.0

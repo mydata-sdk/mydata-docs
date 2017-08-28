@@ -1,0 +1,232 @@
+swagger: '2.0'
+info:
+  title: 'Operator API for Sink Services'
+  description: |
+    This API specification describes MyData Operator API that is used by MyData compliant sink services. Some of the endpoints are part of the transaction flow and should not be called independently. For detailed description   see [MyData documentation](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs).
+  version: '2.0'
+  contact:
+    url: 'https://github.com/mydata-sdk'
+  license:
+    name: 'MIT License (MIT)'
+    url: 'https://opensource.org/licenses/MIT'
+externalDocs:
+  description: 'External documentation'
+  url: 'https://github.com/mydata-sdk'    
+host: 127.0.0.1
+paths:
+  /link:
+    post:
+      tags:
+      - "SLR"
+      description: "End point where Service Mgmnt POSTs after user has been authenticated\
+        \ by the Service in order to deliver surrogate id to Operator. This endpoint is part of Service Linking transaction and should not be called independently."
+      summary: "Inform Operator we're ready to continue creation of SLR"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Contains code, surrogate_id and incase of Sink service a token_key"
+        required: true
+        schema:
+          $ref: "#/definitions/LinkParams"
+      responses:
+        201:
+          description: "Returns 201 CREATED and the created SLR"
+          schema:
+            $ref: "#/definitions/VerifyResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"
+
+  /verify:
+    post:
+      tags:
+      - "SLR"
+      description:"End point where Service Mgmnt POSTs after signing Service Link Record from Operator. This endpoint is part of Service Linking transaction and should not be called independently."
+      summary: "Send Service Signed SLR back to Operator for verification"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Service Link Recordr"
+        required: true
+        schema:
+          $ref: "#/definitions/VerifyParams"
+      responses:
+        201:
+          description: "Returns 201 CREATED so Operator knows Service Link Record was verified\
+            \ successfully"
+          schema:
+            $ref: "#/definitions/VerifyResponse"
+        500:
+          description: "Internal server error. The actual status code and content of the error message may vary depending on error occurred."
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"
+            
+  /auth_token/{cr_id}:
+    get:
+      tags:
+      - "Consent Management"
+      description: "Returns Authorisation token for specific Consent Record ID"
+      summary: "Get Authorisation token"
+      parameters:
+      - name: "cr_id"
+        in: "path"
+        description: "Unique ID of consent record"
+        required: true
+        type: "string"
+        format: "uuid4"
+      responses:
+        200:
+          description: "returns 200 OK and Authorisation Token"
+          schema:
+            $ref: "#/definitions/Auth_TokenReply"
+        500:
+          description: "Internal server error. The actual status code and content of the error message may vary depending on error occurred."
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"
+
+definitions:
+  errors:
+      type: object
+      properties:
+        status:
+          type: string
+          description: HTTP status code as string value.
+        code:
+          type: integer
+          description: HTTP status code
+        title:
+          type: string
+          description: Title of error message.
+        detail:
+          type: string
+          description: Detailed error message.
+        source:
+          type: string
+          description: Source URI
+
+  SLR_raw:
+    type: "object"
+    properties:
+      protected:
+        type: "string"
+      payload:
+        type: "string"
+      signatures:
+        type: array
+        items:
+          type: object
+
+  SLR_content:
+   type: "object"
+   properties:
+    attributes:
+      $ref: '#/definitions/SLR_raw'
+    type:
+      type: "string"
+    id:
+      type: "string"
+
+  SSR_content:
+   type: "object"
+   properties:
+    attributes:
+      type: "object"
+      properties:
+        header:
+          type: "object"
+        protected:
+          type: "string"
+        payload:
+          type: "string"
+        signature:
+          type: "string"
+    type:
+      type: "string"
+    id:
+      type: "string"
+
+
+  LinkParams:
+    type: "object"
+    properties:
+      code:
+        type: "string"
+        description: "string containing code"
+      token_key:
+        $ref: "#/definitions/LinkParams_token_key"
+      surrogate_id:
+        type: "string"
+        description: "string containing surrogate_id"
+
+  VerifyParams:
+    type: "object"
+    properties:
+      data:
+        type: object
+        properties:
+          code:
+            type: string
+            description: string containing code
+      slr:
+        $ref: "#/definitions/SLR_raw"
+
+  LinkParams_token_key:
+    properties:
+      kty:
+        type: "string"
+        description: "string containing kty"
+      x:
+        type: "string"
+        description: "string containing x"
+      kid:
+        type: "string"
+        description: "string containing kid"
+      crv:
+        type: "string"
+        description: "string containing crv"
+      y:
+        type: "string"
+        description: "string containing y"
+
+  VerifyResponse:
+    type: object
+    properties:
+      code:
+        type: string
+        description: string containing code
+      data:
+        type: object
+        properties:
+          ssr:
+            $ref: "#/definitions/SSR_content"
+          slr:
+            $ref: "#/definitions/SLR_content"
+
+
+  Auth_TokenReply:
+    type: object
+    properties:
+      auth_token:
+        type: string
+        description: string containing auth_token

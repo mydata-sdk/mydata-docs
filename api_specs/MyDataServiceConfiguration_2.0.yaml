@@ -1,0 +1,285 @@
+swagger: '2.0'
+info:
+  title: 'MyData - Service Configuration'
+  description: |
+    This API specification describes MyData Service Configuration API. This API defines one endpoint that provides information about specific MyData Service, such as Services's contact information, data service processes or provides, data processing purposes and what data it uses for each purpose. See [MyData Service Description]([MyData Specifications](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs) for more details.
+  version: '2.0'  contact:
+    url: 'https://github.com/mydata-sdk'
+  license:
+    name: 'MIT License (MIT)'
+    url: 'https://opensource.org/licenses/MIT'
+
+host: 127.0.0.1:8080
+
+schemes:
+   - http
+
+produces:
+  - application/json
+
+externalDocs:
+  description: 'External documentation'
+  url: 'https://github.com/mydata-sdk'
+
+paths:
+
+  /.well-known/mydata/servicedescription:
+    get:
+ 
+      summary: 'Provides services service description'
+      description: "Provides services service description. For details see MyData Service Description 1.3 specification. Service description can be of type serviceDescription_source or serviceDescription_sink, see Models below for details for serviceDescription_sink structure."
+      tags:
+        - Configuration
+     
+        
+
+      responses:
+        '200':
+          description: services MyData Service Description
+          schema:
+            $ref: '#/definitions/serviceDescription_source'
+        '404':
+          description: not found
+        '500':
+          description: Internal Server error
+
+
+
+
+definitions:
+
+  serviceDescription_source:
+    type: object
+    properties:
+      serviceId: 
+        type: string
+
+      serviceProvider:
+        type: object
+        properties:
+          id: 
+            type: string
+          businessID: 
+            type: string
+          name: 
+            type: string
+          address1: 
+            type: string
+          address2: 
+            type: string
+          postalCode: 
+            type: string
+          city: 
+            type: string
+          state: 
+            type: string
+          country: 
+            type: string
+          contactEmail: 
+            type: string
+          contactTel: 
+            type: string
+          jurisdiction: 
+            type: string
+      serviceDescriptionVersion: 
+        type: string
+      serviceDescriptionTitle: 
+        type: string
+      serviceIconURL: 
+        type: string
+      serviceType: 
+        type: string
+        enum: ["source"]
+      cert:
+        type: object
+        properties:
+          x5u: 
+            type: string
+      serviceUrls:
+        type: object
+        properties:
+          domain: 
+            type: string
+          libraryDomain: 
+            type: string
+          linkingUri: 
+            type: string
+          linkingRedirectUri: 
+            type: string
+      compatibleServices:
+        type: array
+        items:
+          type: string
+      humanReadableDescription:
+        type: string
+      keywords:
+        type: array
+        items:
+          type: string
+      serviceDataDescription:
+        type: array
+        items:
+          type: object
+          properties:
+            dataDescriptionId: 
+              type: string
+            description: 
+              type: string
+            title: 
+              type: string
+            dataset:
+              type: array
+              items:
+                type: object
+                properties:
+                  datasetId: 
+                    type: string
+                  description: 
+                    type: string
+                  datasetSchema:
+                    type: object
+                    properties:
+                      "@context":
+                        type: string
+                      "@type": 
+                        type: string 
+                      "@id": 
+                        type: string
+                      url: 
+                        type: string
+                  distribution:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        distributionId:
+                          type: string
+                        accessURL:
+                          type: string
+                        format: 
+                          type: string
+                        title:
+                          type: string
+
+                  keyword:
+                    type: array
+                    items:
+                      type: string
+                  language: 
+                    type: string
+                  title: 
+                    type: string
+      createdOnDate: 
+        type: string
+      createdByUserId:
+        type: string
+ 
+  serviceDescription_sink:
+    type: object
+    properties:
+      serviceId: 
+        type: string
+
+      serviceProvider:
+        type: object
+        properties:
+          id: 
+            type: string
+          businessID: 
+            type: string
+          name: 
+            type: string
+          address1: 
+            type: string
+          address2: 
+            type: string
+          postalCode: 
+            type: string
+          city: 
+            type: string
+          state: 
+            type: string
+          country: 
+            type: string
+          contactEmail: 
+            type: string
+          contactTel: 
+            type: string
+          jurisdiction: 
+            type: string
+      serviceDescriptionVersion: 
+        type: string
+      serviceDescriptionTitle: 
+        type: string
+      serviceIconURL: 
+        type: string
+      serviceType: 
+        type: string
+        enum: [sink]
+      cert:
+        type: object
+        properties:
+          x5u: 
+            type: string
+      serviceUrls:
+        type: object
+        properties:
+          domain: 
+            type: string
+          libraryDomain: 
+            type: string
+          linkingUri: 
+            type: string
+          linkingRedirectUri: 
+            type: string
+      compatibleServices:
+        type: array
+        items:
+          type: string
+      humanReadableDescription:
+        type: string
+      keywords:
+        type: array
+        items:
+          type: string
+      purposes:
+        type: array
+        items:
+          type: object
+          properties:
+            purposeId: 
+              type: string
+            description: 
+              type: string
+            title: 
+              type: string
+            dataset:
+              type: array
+              items:
+                type: object
+                properties:
+                  datasetId: 
+                    type: string
+                  description: 
+                    type: string
+
+                  descriptionUrl:
+                    type: string
+                  iconUlr:
+                    type: string
+                  requiredDatasets:
+                    type: array
+                    items:
+                      type: string
+                  optionalDatasets:
+                    type: array
+                    items:
+                      type: string
+                  language: 
+                    type: string
+                  title: 
+                    type: string
+      createdOnDate: 
+        type: string
+      createdByUserId:
+        type: string

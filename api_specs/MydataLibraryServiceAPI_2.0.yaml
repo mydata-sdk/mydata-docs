@@ -1,0 +1,224 @@
+swagger: '2.0'
+info:
+  version: "2.0"
+  title: 'MyData Library Service API'
+  description: |
+  
+    This API specification describes MyData Library Service API. This API is used by the Service to to integrate with the Service Library. For more details on MyData Library see [MyData Library Integration Guide]([MyData Specifications](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs)).
+  contact:
+    url: 'https://github.com/mydata-sdk'
+  license:
+    name: 'MIT License (MIT)'
+    url: 'https://opensource.org/licenses/MIT'
+paths:
+  /surrogate_id:
+    get:
+      tags:
+      - "Service Linking"
+      description: "Generate surrogate_id."
+      summary: "Generate surrogate_id for given MyData Account and Service Account."
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Contains user_id(service user) and operator_id"
+        required: true
+        schema:
+          $ref: "#/definitions/SurrogateIdParams"
+      responses:
+        201:
+          description: "Returns 201 CREATED and the created surrogate_id"
+          schema:
+            $ref: "#/definitions/SurrogateIdResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"
+
+
+  /linking:
+    post:
+      tags:
+      - "Service Linking"
+      description: "Initiate linking process."
+      summary: "Link service account to Mydata Account"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Contains required parameters for initiating linking"
+        required: true
+        schema:
+          $ref: "#/definitions/linkingParams"
+      responses:
+        201:
+          description: "Returns 201 CREATED and the created Service Link Record and Service Link Status Record"
+          schema:
+            $ref: "#/definitions/linkingResponse"
+        500:
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/errors"
+        502:
+          description: "Bad Gateway"
+          schema:
+            $ref: "#/definitions/errors"
+
+  /dc:
+    get:
+      tags:
+      - "Sink only for Data Transfer"
+      summary: "Initialises Data Transfer flow"
+      description: "End point that initialises Data Transfer flow "
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "payload detailing data"
+        required: true
+        schema:
+          $ref: "#/definitions/DcPayload"
+      - in: "query"
+        name: dataset_id
+        description: "Dataset we want to request data for"
+        type: string
+      responses:
+        200:
+          description: "Returns 200 OK"
+
+        500:
+          description: "Internal server error. The actual status code and content of the error message may vary depending on error occurred."
+          schema:
+            $ref: "#/definitions/errors"
+
+
+
+
+
+definitions:
+  errors:
+      type: object
+      properties:
+        status:
+          type: string
+          description: HTTP status code as string value.
+        code:
+          type: integer
+          description: HTTP status code
+        title:
+          type: string
+          description: Title of error message.
+        detail:
+          type: string
+          description: Detailed error message.
+        source:
+          type: string
+          description: Source URI
+  DcPayload:
+      type: object
+      properties:
+        surrogate_id:
+          type: string
+          description: string containing surrogate_id
+        cr_id:
+          type: string
+          description: string contaning cr_id
+        rs_id:
+          type: string
+          description: string containing rs_id
+  
+          
+  SurrogateIdParams:
+   type: object
+   properties:
+     operator_id:
+       type: string
+       description: Id of Operator we're linking with
+     user_id: 
+       type: string
+       description: Service user_id
+       
+       
+  SurrogateIdResponse:
+    type: object
+    properties:
+      surrogate_id:
+        type: string
+        description: Generated surrogate_id
+        
+  linkingParams:
+    type: object
+    properties:
+      code:
+        type: string
+      surrogate_id:
+        type: string
+      operator_id:
+        type: string
+      user_id:
+        type: string
+      return_url:
+        type: string        
+        
+  linkingResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      data:
+        type: object
+        properties:
+          slr:
+            type: object
+            properties:
+              attributes:
+                type: object
+                properties:
+                  signatures:
+                    type: array
+                  payload:
+                    type: string
+              type:
+                type: string
+              id:
+                type: string
+          ssr:
+            type: object
+            properties:
+              attributes:
+                type: object
+                properties:
+                  header:
+                    type: object
+                    properties:
+                      kid:
+                        type: string
+                  protected:
+                    type: string
+                  payload:
+                    type: string
+                  signature:
+                    type: string
+              type:
+                type: string
+              id:
+                type: string        
+        
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /dhr/MydataLibraryServiceAPI/2.0
+schemes:
+ - https

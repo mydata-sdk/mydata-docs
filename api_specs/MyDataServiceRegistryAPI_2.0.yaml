@@ -1,0 +1,356 @@
+swagger: '2.0'
+info:
+  title: MyData - Service Registry
+  description: |
+    This API specification describes MyData Service Registry API. The reader is assumed to be familiar with MyData documentation, especially Service Description documentation. This API defines endpoints for saving and retrieving Service Descriptions. See [MyData Service Description]([MyData Specifications](https://github.com/mydata-sdk/mydata-docs/tree/master/architecture_specs)) for more details on Service Description structure.
+  version: '2.0'
+  contact:
+    url: 'https://github.com/mydata-sdk'
+  license:
+    name: 'MIT License (MIT)'
+    url: 'https://opensource.org/licenses/MIT'
+host: 127.0.0.1
+
+
+schemes:
+ - https
+consumes:
+  - application/json
+
+produces:
+  - application/json
+
+
+paths:
+  /serviceregistry-roa/resourcedirectory/v1/serviceregistrations/:
+    post:
+      summary: "Saves service description"
+      description: "Saves service description to database. Body can be of type serviceDescription_source or serviceDescription_sink. See Models section for more details"
+
+
+      parameters:
+
+        - name: serviceDescription
+          in: body
+          description: 'Service description'
+          required: true
+         
+          schema:
+            $ref: '#/definitions/serviceDescription_source'
+      
+
+      responses:
+        '201':
+          description: 'Service description saved to db'
+          headers:
+            Location:
+              type: string
+              description: location of the created object
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server error
+  
+  
+    get:
+      summary: "Returns all service descriptions"
+      description: "Returns all service descriptions. Response objects can contain both serviceDescription_source or serviceDescription_sink types. See Models section for more details "
+
+
+      
+
+      responses:
+        '200':
+          description: 'List of all registerd service description objects'
+
+          schema:
+             $ref: '#/definitions/serviceDescriptions'
+       
+
+
+
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server error
+
+  /serviceregistry-roa/resourcedirectory/v1/serviceregistrations/{id}/:
+    get:
+      summary: "Returns service description for service {id}"
+      description: "Returns service description with id {id}. Response object can be either type serviceDescription_source or serviceDescription_sink. See Models section for more details"
+      parameters:
+        - name: id
+          in: path
+          type: string
+          description: 'Service Id'
+          required: true
+      responses:
+        '200':
+          description: 'Service description for service {id}'
+          schema:
+             $ref: '#/definitions/serviceDescriptions'
+       
+
+
+
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server error
+  
+
+definitions:
+
+
+  serviceDescriptions:
+    type: array
+    items:
+      $ref: '#/definitions/serviceDescription_source'
+        
+  serviceDescription_source:
+    type: object
+    properties:
+      serviceId: 
+        type: string
+
+      serviceProvider:
+        type: object
+        properties:
+          id: 
+            type: string
+          businessID: 
+            type: string
+          name: 
+            type: string
+          address1: 
+            type: string
+          address2: 
+            type: string
+          postalCode: 
+            type: string
+          city: 
+            type: string
+          state: 
+            type: string
+          country: 
+            type: string
+          contactEmail: 
+            type: string
+          contactTel: 
+            type: string
+          jurisdiction: 
+            type: string
+      serviceDescriptionVersion: 
+        type: string
+      serviceDescriptionTitle: 
+        type: string
+      serviceIconURL: 
+        type: string
+      serviceType: 
+        type: string
+        enum: ["source"]
+      cert:
+        type: object
+        properties:
+          x5u: 
+            type: string
+      serviceUrls:
+        type: object
+        properties:
+          domain: 
+            type: string
+          libraryDomain: 
+            type: string
+          linkingUri: 
+            type: string
+          linkingRedirectUri: 
+            type: string
+      compatibleServices:
+        type: array
+        items:
+          type: string
+      humanReadableDescription:
+        type: string
+      keywords:
+        type: array
+        items:
+          type: string
+      serviceDataDescription:
+        type: array
+        items:
+          type: object
+          properties:
+            dataDescriptionId: 
+              type: string
+            description: 
+              type: string
+            title: 
+              type: string
+            dataset:
+              type: array
+              items:
+                type: object
+                properties:
+                  datasetId: 
+                    type: string
+                  description: 
+                    type: string
+                  datasetSchema:
+                    type: object
+                    properties:
+                      "@context":
+                        type: string
+                      "@type": 
+                        type: string 
+                      "@id": 
+                        type: string
+                      url: 
+                        type: string
+                  distribution:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        distributionId:
+                          type: string
+                        accessURL:
+                          type: string
+                        format: 
+                          type: string
+                        title:
+                          type: string
+
+                  keyword:
+                    type: array
+                    items:
+                      type: string
+                  language: 
+                    type: string
+                  title: 
+                    type: string
+      createdOnDate: 
+        type: string
+      createdByUserId:
+        type: string
+ 
+  serviceDescription_sink:
+    type: object
+    properties:
+      serviceId: 
+        type: string
+
+      serviceProvider:
+        type: object
+        properties:
+          id: 
+            type: string
+          businessID: 
+            type: string
+          name: 
+            type: string
+          address1: 
+            type: string
+          address2: 
+            type: string
+          postalCode: 
+            type: string
+          city: 
+            type: string
+          state: 
+            type: string
+          country: 
+            type: string
+          contactEmail: 
+            type: string
+          contactTel: 
+            type: string
+          jurisdiction: 
+            type: string
+      serviceDescriptionVersion: 
+        type: string
+      serviceDescriptionTitle: 
+        type: string
+      serviceIconURL: 
+        type: string
+      serviceType: 
+        type: string
+        enum: [sink]
+      cert:
+        type: object
+        properties:
+          x5u: 
+            type: string
+      serviceUrls:
+        type: object
+        properties:
+          domain: 
+            type: string
+          libraryDomain: 
+            type: string
+          linkingUri: 
+            type: string
+          linkingRedirectUri: 
+            type: string
+      compatibleServices:
+        type: array
+        items:
+          type: string
+      humanReadableDescription:
+        type: string
+      keywords:
+        type: array
+        items:
+          type: string
+      purposes:
+        type: array
+        items:
+          type: object
+          properties:
+            purposeId: 
+              type: string
+            description: 
+              type: string
+            title: 
+              type: string
+            dataset:
+              type: array
+              items:
+                type: object
+                properties:
+                  datasetId: 
+                    type: string
+                  description: 
+                    type: string
+
+                  descriptionUrl:
+                    type: string
+                  iconUlr:
+                    type: string
+                  requiredDatasets:
+                    type: array
+                    items:
+                      type: string
+                  optionalDatasets:
+                    type: array
+                    items:
+                      type: string
+                  language: 
+                    type: string
+                  title: 
+                    type: string
+      createdOnDate: 
+        type: string
+      createdByUserId:
+        type: string
