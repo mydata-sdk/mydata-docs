@@ -252,6 +252,7 @@ definitions:
         $ref: "#/definitions/SLR_raw"
 
   LinkParams_token_key:
+    type: "object"
     properties:
       kty:
         type: "string"
