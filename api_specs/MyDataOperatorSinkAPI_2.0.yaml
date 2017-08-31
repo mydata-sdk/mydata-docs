@@ -107,22 +107,22 @@ paths:
 
 definitions:
   errors:
-      type: object
+      type: "object"
       properties:
         status:
-          type: string
+          type: "string"
           description: HTTP status code as string value.
         code:
-          type: integer
+          type: "integer"
           description: HTTP status code
         title:
-          type: string
+          type: "string"
           description: Title of error message.
         detail:
-          type: string
+          type: "string"
           description: Detailed error message.
         source:
-          type: string
+          type: "string"
           description: Source URI
 
   SLR_raw:
@@ -133,9 +133,9 @@ definitions:
       payload:
         type: "string"
       signatures:
-        type: array
+        type: "array"
         items:
-          type: object
+          type: "object"
 
   SLR_content:
    type: "object"
@@ -183,15 +183,16 @@ definitions:
     type: "object"
     properties:
       data:
-        type: object
+        type: "object"
         properties:
           code:
-            type: string
+            type: "string"
             description: string containing code
       slr:
         $ref: "#/definitions/SLR_raw"
 
   LinkParams_token_key:
+    type: "object"
     properties:
       kty:
         type: "string"
@@ -210,13 +211,13 @@ definitions:
         description: "string containing y"
 
   VerifyResponse:
-    type: object
+    type: "object"
     properties:
       code:
-        type: string
+        type: "string"
         description: string containing code
       data:
-        type: object
+        type: "object"
         properties:
           ssr:
             $ref: "#/definitions/SSR_content"
@@ -225,8 +226,8 @@ definitions:
 
 
   Auth_TokenReply:
-    type: object
+    type: "object"
     properties:
       auth_token:
-        type: string
+        type: "string"
         description: string containing auth_token
