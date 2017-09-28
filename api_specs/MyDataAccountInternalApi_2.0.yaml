@@ -41,7 +41,7 @@ securityDefinitions:
 
 externalDocs:
   description: 'External documentation'
-  url: 'https://github.com/mydata-sdk'
+  url: 'https://github.com/HIIT/mydata-stack'
 
 paths:
   /auth/sdk/:
@@ -2132,6 +2132,15 @@ definitions:
             type: string
           slr_id:
             type: string
+          service_description_version:
+            type: string
+          consent_proposal:
+            type: object
+            properties:
+              url:
+                type: string
+              hash:
+                type: string
           operator:
             type: string
           subject_id:
@@ -2173,18 +2182,6 @@ definitions:
             $ref: '#/definitions/jwk'
           token_issuer_key:
             $ref: '#/definitions/jwk'
-      consent_receipt_part:
-        type: object
-        properties:
-          ki_cr:
-            type: object
-            description: 'Kantara CR'
-      extension_part:
-        type: object
-        properties:
-          extensions:
-            type: object
-            description: 'None for this release'
 
   consentPayloadSink:
     type: object
@@ -2201,6 +2198,15 @@ definitions:
             type: string
           slr_id:
             type: string
+          service_description_version:
+            type: string
+          consent_proposal:
+            type: object
+            properties:
+              url:
+                type: string
+              hash:
+                type: string            
           operator:
             type: string
           subject_id:
@@ -2243,19 +2249,14 @@ definitions:
           usage_rules:
             type: array
             items:
-              type: string
-      consent_receipt_part:
-        type: object
-        properties:
-          ki_cr:
-            type: object
-            description: 'Kantara CR'
-      extension_part:
-        type: object
-        properties:
-          extensions:
-            type: object
-            description: 'None for this release'
+              type: object
+              properties:
+                purposeId:
+                  type: string
+                datasets:
+                  type: array
+                  items: 
+                    type: string
 
   newConsentSource:
     type: object
