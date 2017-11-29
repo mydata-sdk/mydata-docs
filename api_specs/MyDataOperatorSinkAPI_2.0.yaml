@@ -50,7 +50,7 @@ paths:
     post:
       tags:
       - "SLR"
-      description:"End point where Service Mgmnt POSTs after signing Service Link Record from Operator. This endpoint is part of Service Linking transaction and should not be called independently."
+      description: "End point where Service Mgmnt POSTs after signing Service Link Record from Operator. This endpoint is part of Service Linking transaction and should not be called independently."
       summary: "Send Service Signed SLR back to Operator for verification"
       consumes:
       - "application/json"
