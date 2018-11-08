@@ -15,7 +15,7 @@ This repository contains technical specifications defining the MyData reference 
 ## Contributing
 
 - Via GitHub issues
-- Contact: Harri Honko (harri.honko@tut.fi) or Antti Poikola (antti.poikola@hiit.fi)
+- Contact: Harri Honko (harri.honko@tut.fi) or Samuli Tuoriniemi (samuli.tuoriniemi@oulu.fi)
 
 
 ## Copying and License
