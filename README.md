@@ -1,5 +1,5 @@
 # MyData Architecture - Specifications
-This repository contains technical specifications defining the MyData reference architecture.
+This repository contains technical specifications defining a proposal for MyData reference architecture.
 
 
 ## Architecture Specifications
@@ -15,7 +15,7 @@ This repository contains technical specifications defining the MyData reference 
 ## Contributing
 
 - Via GitHub issues
-- Contact: Harri Honko (harri.honko@tut.fi) or Samuli Tuoriniemi (samuli.tuoriniemi@oulu.fi)
+- Contact: Harri Honko (harri.honko@gmail.com) or Samuli Tuoriniemi (samuli.tuoriniemi@oulu.fi)
 
 
 ## Copying and License
