@@ -3,10 +3,10 @@ This repository contains technical specifications defining a proposal for MyData
 
 
 ## Architecture Specifications
-[Architecture Specifications](/architecture_spec)
+[Architecture Specifications](/architecture_specs)
 
 ## API Specifications
-[API Specifications](/api_spec)
+[API Specifications](/api_specs)
 
 ## Flow diagrams
 [Flow diagrams](flow_diag)
